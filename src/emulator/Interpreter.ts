@@ -13,6 +13,16 @@ export default class Interpreter {
    */
   memory = new Uint8Array(0xFFF);
 
+  /**
+   * The stack. Contains addresses that should be returned to after finishing a subroutine.
+   */
+  stack = new Uint16Array(16);
+
+  /** 16-bit program counter. Stores the address of the currently executing instruction. */
+  program_counter = 0b0000_0000_0000_0000;
+  /** 8-bit stack pointer. Points to current "top" of the stack. */
+  stack_pointer = 0b0000_0000;
+
   // General purpose 8-bit registers.
   register_v1 = 0b0000_0000;
   register_v2 = 0b0000_0000;
@@ -39,9 +49,4 @@ export default class Interpreter {
   timer_delay = 0b0000_0000;
   /** Sound timer */
   timer_sound = 0b0000_0000;
-
-  /** 16-bit program counter. Stores the currently executing address. */
-  program_counter = 0b0000_0000_0000_0000;
-  /** 8-bit stack pointer. Points to the top level of the stack. */
-  stack_pointer = 0b0000_0000;
 }
