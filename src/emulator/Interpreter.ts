@@ -1,5 +1,6 @@
 import Memory from './Memory';
 import Register from './Register';
+import Stack from './Stack';
 
 /**
  * Chip-8 interpreter.
@@ -17,14 +18,12 @@ export default class Interpreter {
   memory = new Memory();
 
   /**
-   * The stack. Contains addresses that should be returned to after finishing a subroutine.
+   * Stack of addresses that should be returned to after finishing a subroutine.
    */
-  stack = new Uint16Array(16);
+  stack = new Stack();
 
   /** 16-bit program counter. Stores the address of the currently executing instruction. */
   program_counter = new Register(16);
-  /** 8-bit stack pointer. Points to current "top" of the stack. */
-  stack_pointer = new Register(8);
 
   // General purpose 8-bit registers.
   register_v1 = new Register(8);
