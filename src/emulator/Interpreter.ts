@@ -1,3 +1,5 @@
+import Register from './Register';
+
 /**
  * Chip-8 interpreter.
  * @see https://web.archive.org/web/20160213213233/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
@@ -19,34 +21,34 @@ export default class Interpreter {
   stack = new Uint16Array(16);
 
   /** 16-bit program counter. Stores the address of the currently executing instruction. */
-  program_counter = 0b0000_0000_0000_0000;
+  program_counter = new Register(16);
   /** 8-bit stack pointer. Points to current "top" of the stack. */
-  stack_pointer = 0b0000_0000;
+  stack_pointer = new Register(8);
 
   // General purpose 8-bit registers.
-  register_v1 = 0b0000_0000;
-  register_v2 = 0b0000_0000;
-  register_v3 = 0b0000_0000;
-  register_v4 = 0b0000_0000;
-  register_v5 = 0b0000_0000;
-  register_v6 = 0b0000_0000;
-  register_v7 = 0b0000_0000;
-  register_v8 = 0b0000_0000;
-  register_v9 = 0b0000_0000;
-  register_vA = 0b0000_0000;
-  register_vB = 0b0000_0000;
-  register_vC = 0b0000_0000;
-  register_vD = 0b0000_0000;
-  register_vE = 0b0000_0000;
+  register_v1 = new Register(8);
+  register_v2 = new Register(8);
+  register_v3 = new Register(8);
+  register_v4 = new Register(8);
+  register_v5 = new Register(8);
+  register_v6 = new Register(8);
+  register_v7 = new Register(8);
+  register_v8 = new Register(8);
+  register_v9 = new Register(8);
+  register_vA = new Register(8);
+  register_vB = new Register(8);
+  register_vC = new Register(8);
+  register_vD = new Register(8);
+  register_vE = new Register(8);
 
   /** 8-bit register, normally used for flags, and not used by any program. */
-  register_vf = 0b0000_0000;
+  register_vf = new Register(8);
 
   /** 16-bit register, normally used to store memory addresses. */
-  register_i = 0b0000_0000_0000_0000;
+  register_i = new Register(16);
 
   /** Delay timer */
-  timer_delay = 0b0000_0000;
+  timer_delay = new Register(8);
   /** Sound timer */
-  timer_sound = 0b0000_0000;
+  timer_sound = new Register(8);
 }
