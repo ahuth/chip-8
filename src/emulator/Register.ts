@@ -1,10 +1,10 @@
 export default class Register {
   /** Register size in bits. */
-  size: number;
+  size: 8 | 16;
   /** Value currenly held in the register. */
   value = 0;
 
-  constructor(size: number) {
+  constructor(size: 8 | 16) {
     this.size = size;
   }
 
