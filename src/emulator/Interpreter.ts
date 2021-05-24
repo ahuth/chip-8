@@ -35,11 +35,11 @@ export default class Interpreter {
   register_v7 = new Register(8);
   register_v8 = new Register(8);
   register_v9 = new Register(8);
-  register_vA = new Register(8);
-  register_vB = new Register(8);
-  register_vC = new Register(8);
-  register_vD = new Register(8);
-  register_vE = new Register(8);
+  register_va = new Register(8);
+  register_vb = new Register(8);
+  register_vc = new Register(8);
+  register_vd = new Register(8);
+  register_ve = new Register(8);
 
   /** 8-bit register, normally used for flags, and not used by any program. */
   register_vf = new Register(8);
