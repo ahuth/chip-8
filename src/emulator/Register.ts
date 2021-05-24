@@ -1,8 +1,8 @@
 export default class Register {
   /** Register size in bits. */
-  size: 8 | 16;
+  private size: 8 | 16;
   /** Value currenly held in the register. */
-  value = 0;
+  private value = 0;
 
   constructor(size: 8 | 16) {
     this.size = size;
@@ -21,5 +21,9 @@ export default class Register {
       throw new Error(`Value too large for ${this.size}-bit register`);
     }
     this.value = value;
+  }
+
+  get() {
+    return this.value;
   }
 }
