@@ -1,3 +1,4 @@
+import Memory from './Memory';
 import Register from './Register';
 
 /**
@@ -13,7 +14,7 @@ export default class Interpreter {
    * - 0x600 is where ETI 660 Chip-8 programs start.
    * - 0xFFF is the end of RAM.
    */
-  memory = new Uint8Array(0xFFF);
+  memory = new Memory();
 
   /**
    * The stack. Contains addresses that should be returned to after finishing a subroutine.
