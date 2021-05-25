@@ -52,17 +52,16 @@ export default class Interpreter {
   /** Sound timer */
   timer_sound = new Register(8);
 
-  load(program: number[]) {
+  *interpret(program: number[]) {
     this.memory.load(program);
     // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
     // let's assume a normal program, and set the program counter accordingly.
     this.program_counter.set(0x200);
-  }
 
-  tick() {
-    const instruction = this.memory.read2(this.program_counter.get());
-    console.log(instruction.toString(16));
-    this.program_counter.increment(2);
-    return !!instruction;
+    while (true) {
+      const instruction = this.memory.read2(this.program_counter.get());
+      yield instruction;
+      this.program_counter.increment(2);
+    }
   }
 }
