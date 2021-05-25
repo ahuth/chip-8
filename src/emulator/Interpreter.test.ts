@@ -10,4 +10,5 @@ test('interpreting', () => {
   ]);
   expect(gen.next().value).toEqual(0x00E0);
   expect(gen.next().value).toEqual(0x61AB);
+  expect(gen.next().done).toEqual(true);
 });

@@ -68,6 +68,9 @@ export default class Interpreter {
 
     while (true) {
       const instruction = this.memory.read2(this.program_counter.get());
+
+      if (!instruction) { return; }
+
       yield instruction;
       this.program_counter.increment(2);
     }
