@@ -51,4 +51,20 @@ export default class Interpreter {
   timer_delay = new Register(8);
   /** Sound timer */
   timer_sound = new Register(8);
+
+  interpret(program: number[]) {
+    this.program_counter.set(0x200);
+    this.memory.load(program);
+
+    while (true) {
+      const instruction = this.memory.read2(this.program_counter.get());
+
+      if (!instruction) {
+        break;
+      }
+
+      console.log(instruction.toString(16));
+      this.program_counter.increment(2);
+    }
+  }
 }
