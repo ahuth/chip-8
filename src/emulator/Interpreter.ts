@@ -52,6 +52,14 @@ export default class Interpreter {
   /** Sound timer */
   timer_sound = new Register(8);
 
+  /**
+   * Generator function for running a program. The returned generator object must be manually
+   * advanced. Think of this as manually advancing the clock of a CPU.
+   *
+   * @example
+   * const gen = interpreter.interpret(program);
+   * gen.next();
+   */
   *interpret(program: number[]) {
     this.memory.load(program);
     // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
