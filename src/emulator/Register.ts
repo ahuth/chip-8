@@ -20,10 +20,7 @@ export default class Register {
   }
 
   set(value: number) {
-    if (value > this.maxValue) {
-      throw new Error(`Value too large for ${this.size}-bit register`);
-    }
-    this.value = value;
+    this.value = value % this.maxValue;
   }
 
   get() {

@@ -47,5 +47,6 @@ test('setting a value', () => {
 test('setting a value greater than the register size', () => {
   const register = new Register(8);
   expect(register.get()).toEqual(0);
-  expect(() => register.set(0xFFF)).toThrow('Value too large for 8-bit register');
+  register.set(0x101);
+  expect(register.get()).toEqual(1);
 });
