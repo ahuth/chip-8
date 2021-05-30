@@ -1,14 +1,13 @@
 import Interpreter from './Interpreter';
 
-test('interpreting', () => {
+test('JP', () => {
   const interpreter = new Interpreter();
   interpreter.load([
-    // Clear screen.
-    0x00, 0xE0,
-    // Put 0xAB into register V1.
-    0x61, 0xAB,
+    // Jump to address 666.
+    0x16, 0x66,
   ]);
-  expect(interpreter.tick()).toEqual(true);
-  expect(interpreter.tick()).toEqual(true);
-  expect(interpreter.tick()).toEqual(false);
+
+  expect(interpreter.program_counter.get()).toEqual(0x200);
+  interpreter.tick();
+  expect(interpreter.program_counter.get()).toEqual(0x666);
 });

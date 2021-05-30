@@ -1,3 +1,4 @@
+import {runInstruction} from './Instruction';
 import Memory from './Memory';
 import Register from './Register';
 import Stack from './Stack';
@@ -64,8 +65,7 @@ export default class Interpreter {
    * Execute one cycle. This is like executing one clock cycle of a CPU.
    */
   tick() {
-    const instruction = this.memory.read2(this.program_counter.get());
-    this.program_counter.increment(2);
-    return !!instruction;
+    const opcode = this.memory.read2(this.program_counter.get());
+    runInstruction(opcode, this);
   }
 }
