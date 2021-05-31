@@ -6,12 +6,12 @@
  * - 0x600 is where ETI 660 Chip-8 programs start.
  * - 0xFFF is the end of RAM.
  */
-export type Memory = Uint8Array;
+export type Memory = ReturnType<typeof create>;
 
 /**
  * Create a new memory bank.
  */
-export function create(): Memory {
+export function create() {
   return new Uint8Array(0xFFF);
 }
 

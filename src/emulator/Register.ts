@@ -1,10 +1,6 @@
-export type Register = {
-  readonly maxValue: number,
-  readonly size: 8 | 16,
-  value: number,
-}
+export type Register = ReturnType<typeof create>;
 
-export function create(size: 8 | 16): Register {
+export function create(size: 8 | 16) {
   return {
     maxValue: 2 ** size,
     size,
