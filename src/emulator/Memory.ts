@@ -6,58 +6,63 @@
  * - 0x600 is where ETI 660 Chip-8 programs start.
  * - 0xFFF is the end of RAM.
  */
-export default class Memory {
-  memory = new Uint8Array(0xFFF);
+export type Memory = ReturnType<typeof create>;
 
-  /**
-   * Read 1 byte from memory.
-   * @param address 12-bit memory address from 0x200 to 0xFFF.
-   * @returns 1 byte
-   */
-  read1(address: number) {
-    return this.memory[address];
-  }
+/**
+ * Create a new memory bank.
+ */
+export function create() {
+  return new Uint8Array(0xFFF);
+}
 
-  /**
-   * Read 2 bytes from memory.
-   * @param address 12-bit memory address from 0x200 to 0xFFF.
-   * @returns 2 bytes
-   */
-  read2(address: number) {
-    // Chip-8 is "big endian", so the most significant byte is first.
-    const hi = this.read1(address);
-    const lo = this.read1(address + 1);
-    // Combine the most and least significant bytes into a single 2-byte number.
-    return (hi << 8) | lo;
-  }
+/**
+ * Read 1 byte from memory.
+ * @param address 12-bit memory address from 0x200 to 0xFFF.
+ * @returns 1 byte
+ */
+export function read1(memory: Memory, address: number): number {
+  return memory[address];
+}
 
-  /**
-   * Write 1 byte to memory.
-   * @param address 12-bit memory address from 0x200 to 0xFFF.
-   * @param data 1 byte of data.
-   */
-  write1(address: number, data: number) {
-    this.memory[address] = data;
-  }
+/**
+ * Read 2 bytes from memory.
+ * @param address 12-bit memory address from 0x200 to 0xFFF.
+ * @returns 2 bytes
+ */
+export function read2(memory: Memory, address: number): number {
+  // Chip-8 is "big endian", so the most significant byte is first.
+  const hi = read1(memory, address);
+  const lo = read1(memory, address + 1);
+  // Combine the most and least significant bytes into a single 2-byte number.
+  return (hi << 8) | lo;
+}
 
-  /**
-   * Write 2 bytes of memory.
-   * @param address 12-bit memory address from 0x200 to 0xFFF.
-   * @param data 2 bytes of data.
-   */
-  write2(address: number, data: number) {
-    // Split apart the data into hi and low bytes.
-    const hi = data >> 8;
-    const lo = data & 0xFF;
-    this.write1(address, hi);
-    this.write1(address + 1, lo);
-  }
+/**
+ * Write 1 byte to memory.
+ * @param address 12-bit memory address from 0x200 to 0xFFF.
+ * @param data 1 byte of data.
+ */
+export function write1(memory: Memory, address: number, data: number): void {
+  memory[address] = data;
+}
 
-  /**
-   * Load data into memory. Normally the loaded data will start at 0x200, because 0-0x1FF is
-   * reserved for the interpreter.
-   */
-  load(data: number[], start = 0x200) {
-    this.memory.set(data, start);
-  }
+/**
+ * Write 2 bytes of memory.
+ * @param address 12-bit memory address from 0x200 to 0xFFF.
+ * @param data 2 bytes of data.
+ */
+export function write2(memory: Memory, address: number, data: number): void {
+  // Split apart the data into hi and low bytes.
+  const hi = data >> 8;
+  const lo = data & 0xFF;
+  write1(memory, address, hi);
+  write1(memory, address + 1, lo);
+}
+
+/**
+ * Load data into memory. Normally the loaded data will start at 0x200, because 0-0x1FF is
+ * reserved for the interpreter.
+ */
+export function load(memory: Memory, data: number[], start = 0x200): void {
+  memory.set(data, start);
 }

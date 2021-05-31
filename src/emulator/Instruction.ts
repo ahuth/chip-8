@@ -1,10 +1,10 @@
-import type Register from './Register';
+import * as Register from './Register';
 
 // Is there a good way to get this type from Interpreter.ts without creating a cycle? I could put
 // this definition in another file, and "implement" it in Interpreter.ts. Not sure it's worth going
 // to that trouble, though.
 interface Interpreter {
-  program_counter: Register,
+  program_counter: Register.Register,
 }
 
 interface Instruction {
@@ -12,7 +12,11 @@ interface Instruction {
   execute: (opcode: number, interpreter: Interpreter) => void,
 }
 
-const instructions: Instruction[] = [
+/**
+ * All instructions that can be executed by this Chip-8 interpreter.
+ * @see https://web.archive.org/web/20160213213233/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.1
+ */
+export const instructions: Instruction[] = [
   // 00E0 - CLS - Clear the display
   {
     test(opcode) {
@@ -20,7 +24,8 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      interpreter.program_counter.set(interpreter.program_counter.get() + 2);
+      const currentAddress = Register.get(interpreter.program_counter);
+      Register.set(interpreter.program_counter, currentAddress + 2);
     },
   },
 
@@ -31,7 +36,8 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      interpreter.program_counter.set(interpreter.program_counter.get() + 2);
+      const currentAddress = Register.get(interpreter.program_counter);
+      Register.set(interpreter.program_counter, currentAddress + 2);
     },
   },
 
@@ -42,17 +48,7 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       const address = opcode & 0x0FFF;
-      interpreter.program_counter.set(address);
+      Register.set(interpreter.program_counter, address);
     },
   },
 ];
-
-export function runInstruction(opcode: number, interpreter: Interpreter) {
-  const instruction = instructions.find((instruction) => instruction.test(opcode));
-
-  if (!instruction) {
-    throw new Error(`Unknown opcode: ${opcode}`);
-  }
-
-  return instruction.execute(opcode, interpreter);
-}
