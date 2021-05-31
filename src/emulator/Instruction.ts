@@ -12,7 +12,7 @@ interface Instruction {
   execute: (opcode: number, interpreter: Interpreter) => void,
 }
 
-const instructions: Instruction[] = [
+export const instructions: Instruction[] = [
   // 00E0 - CLS - Clear the display
   {
     test(opcode) {
@@ -48,13 +48,3 @@ const instructions: Instruction[] = [
     },
   },
 ];
-
-export function runInstruction(opcode: number, interpreter: Interpreter) {
-  const instruction = instructions.find((instruction) => instruction.test(opcode));
-
-  if (!instruction) {
-    throw new Error(`Unknown opcode: ${opcode}`);
-  }
-
-  return instruction.execute(opcode, interpreter);
-}

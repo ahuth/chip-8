@@ -1,4 +1,4 @@
-import {runInstruction} from './Instruction';
+import {instructions} from './Instruction';
 import * as Memory from './Memory';
 import * as Register from './Register';
 import Stack from './Stack';
@@ -59,6 +59,12 @@ export default class Interpreter {
   tick() {
     const currentAddress = Register.get(this.program_counter);
     const opcode = Memory.read2(this.memory, currentAddress);
-    runInstruction(opcode, this);
+    const instruction = instructions.find((instruction) => instruction.test(opcode));
+
+    if (!instruction) {
+      throw new Error(`Unknown opcode: ${opcode}`);
+    }
+
+    instruction.execute(opcode, this);
   }
 }
