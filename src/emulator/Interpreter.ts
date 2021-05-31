@@ -1,7 +1,6 @@
 import {instructions} from './Instruction';
 import * as Memory from './Memory';
 import * as Register from './Register';
-import Stack from './Stack';
 
 /**
  * Chip-8 interpreter.
@@ -13,7 +12,7 @@ export default class Interpreter {
   /**
    * Stack of addresses that should be returned to after finishing a subroutine.
    */
-  stack = new Stack();
+  stack = [];
 
   /** 16-bit program counter. Stores the address of the currently executing instruction. */
   program_counter = Register.create(16);
