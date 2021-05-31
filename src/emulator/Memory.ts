@@ -12,7 +12,7 @@ export type Memory = Uint8Array;
  * Create a new memory bank.
  */
 export function create(): Memory {
-  return new Uint8Array(0xFFFF);
+  return new Uint8Array(0xFFF);
 }
 
 /**
