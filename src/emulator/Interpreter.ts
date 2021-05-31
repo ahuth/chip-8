@@ -1,5 +1,5 @@
 import {runInstruction} from './Instruction';
-import Memory from './Memory';
+import * as Memory from './Memory';
 import Register from './Register';
 import Stack from './Stack';
 
@@ -8,15 +8,7 @@ import Stack from './Stack';
  * @see https://web.archive.org/web/20160213213233/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM
  */
 export default class Interpreter {
-  /**
-   * Memory (4KB)
-   *
-   * - 0x000 to 0x1FF is reserved for the interpreter.
-   * - 0x200 is where most Chip-8 programs start.
-   * - 0x600 is where ETI 660 Chip-8 programs start.
-   * - 0xFFF is the end of RAM.
-   */
-  memory = new Memory();
+  memory = Memory.create();
 
   /**
    * Stack of addresses that should be returned to after finishing a subroutine.
@@ -55,7 +47,7 @@ export default class Interpreter {
 
   /** Load a program into memory so it can be executed. */
   load(program: number[]) {
-    this.memory.load(program);
+    Memory.load(this.memory, program);
     // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
     // let's assume a normal program, and set the program counter accordingly.
     this.program_counter.set(0x200);
@@ -65,7 +57,7 @@ export default class Interpreter {
    * Execute one cycle. This is like executing one clock cycle of a CPU.
    */
   tick() {
-    const opcode = this.memory.read2(this.program_counter.get());
+    const opcode = Memory.read2(this.memory, this.program_counter.get());
     runInstruction(opcode, this);
   }
 }
