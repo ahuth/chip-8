@@ -57,7 +57,8 @@ export default class Interpreter {
    * Execute one cycle. This is like executing one clock cycle of a CPU.
    */
   tick() {
-    const opcode = Memory.read2(this.memory, Register.get(this.program_counter));
+    const currentAddress = Register.get(this.program_counter);
+    const opcode = Memory.read2(this.memory, currentAddress);
     runInstruction(opcode, this);
   }
 }

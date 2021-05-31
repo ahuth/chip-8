@@ -20,7 +20,8 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      Register.set(interpreter.program_counter, Register.get(interpreter.program_counter) + 2);
+      const currentAddress = Register.get(interpreter.program_counter);
+      Register.set(interpreter.program_counter, currentAddress + 2);
     },
   },
 
@@ -31,7 +32,8 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      Register.set(interpreter.program_counter, Register.get(interpreter.program_counter) + 2);
+      const currentAddress = Register.get(interpreter.program_counter);
+      Register.set(interpreter.program_counter, currentAddress + 2);
     },
   },
 
