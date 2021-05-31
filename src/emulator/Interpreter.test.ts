@@ -13,4 +13,20 @@ describe('instructions', () => {
     Interpreter.tick(interpreter);
     expect(Register.get(interpreter.program_counter)).toEqual(0x666);
   });
+
+  test('CALL', () => {
+    const interpreter = Interpreter.create();
+    Interpreter.load(interpreter, [
+      // Call subroutine at address 345.
+      0x23, 0x45,
+    ]);
+
+    expect(Register.get(interpreter.program_counter)).toEqual(0x200);
+    expect(interpreter.stack).toEqual([]);
+
+    Interpreter.tick(interpreter);
+
+    expect(Register.get(interpreter.program_counter)).toEqual(0x345);
+    expect(interpreter.stack).toEqual([0x200]);
+  });
 });

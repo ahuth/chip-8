@@ -5,6 +5,7 @@ import * as Register from './Register';
 // to that trouble, though.
 interface Interpreter {
   program_counter: Register.Register,
+  stack: number[],
 }
 
 interface Instruction {
@@ -49,6 +50,20 @@ export const instructions: Instruction[] = [
     execute(opcode, interpreter) {
       const address = opcode & 0x0FFF;
       Register.set(interpreter.program_counter, address);
+    },
+  },
+
+  // 2nnn - CALL - Call subroutine at nnn.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0x2000;
+    },
+    execute(opcode, interpreter) {
+      const currentAddress = Register.get(interpreter.program_counter);
+      const nextAddress = opcode & 0x0FFF;
+
+      interpreter.stack.push(currentAddress);
+      Register.set(interpreter.program_counter, nextAddress);
     },
   },
 ];

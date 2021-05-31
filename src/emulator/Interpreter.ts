@@ -18,7 +18,7 @@ export function create() {
     /**
      * Stack of addresses that should be returned to after finishing a subroutine.
      */
-    stack: [],
+    stack: [] as number[],
 
     /** 16-bit program counter. Stores the address of the currently executing instruction. */
     program_counter: Register.create(16),
