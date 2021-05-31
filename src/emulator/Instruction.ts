@@ -1,12 +1,5 @@
 import * as Register from './Register';
-
-// Is there a good way to get this type from Interpreter.ts without creating a cycle? I could put
-// this definition in another file, and "implement" it in Interpreter.ts. Not sure it's worth going
-// to that trouble, though.
-interface Interpreter {
-  program_counter: Register.Register,
-  stack: number[],
-}
+import type { Interpreter } from './Interpreter';
 
 interface Instruction {
   test: (opcode: number) => boolean,
