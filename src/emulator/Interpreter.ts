@@ -1,6 +1,6 @@
 import {runInstruction} from './Instruction';
 import * as Memory from './Memory';
-import Register from './Register';
+import * as Register from './Register';
 import Stack from './Stack';
 
 /**
@@ -16,48 +16,48 @@ export default class Interpreter {
   stack = new Stack();
 
   /** 16-bit program counter. Stores the address of the currently executing instruction. */
-  program_counter = new Register(16);
+  program_counter = Register.create(16);
 
   // General purpose 8-bit registers.
-  register_v1 = new Register(8);
-  register_v2 = new Register(8);
-  register_v3 = new Register(8);
-  register_v4 = new Register(8);
-  register_v5 = new Register(8);
-  register_v6 = new Register(8);
-  register_v7 = new Register(8);
-  register_v8 = new Register(8);
-  register_v9 = new Register(8);
-  register_va = new Register(8);
-  register_vb = new Register(8);
-  register_vc = new Register(8);
-  register_vd = new Register(8);
-  register_ve = new Register(8);
+  register_v1 = Register.create(8);
+  register_v2 = Register.create(8);
+  register_v3 = Register.create(8);
+  register_v4 = Register.create(8);
+  register_v5 = Register.create(8);
+  register_v6 = Register.create(8);
+  register_v7 = Register.create(8);
+  register_v8 = Register.create(8);
+  register_v9 = Register.create(8);
+  register_va = Register.create(8);
+  register_vb = Register.create(8);
+  register_vc = Register.create(8);
+  register_vd = Register.create(8);
+  register_ve = Register.create(8);
 
   /** 8-bit register, normally used for flags, and not used by any program. */
-  register_vf = new Register(8);
+  register_vf = Register.create(8);
 
   /** 16-bit register, normally used to store memory addresses. */
-  register_i = new Register(16);
+  register_i = Register.create(16);
 
   /** Delay timer */
-  timer_delay = new Register(8);
+  timer_delay = Register.create(8);
   /** Sound timer */
-  timer_sound = new Register(8);
+  timer_sound = Register.create(8);
 
   /** Load a program into memory so it can be executed. */
   load(program: number[]) {
     Memory.load(this.memory, program);
     // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
     // let's assume a normal program, and set the program counter accordingly.
-    this.program_counter.set(0x200);
+    Register.set(this.program_counter, 0x200);
   }
 
   /**
    * Execute one cycle. This is like executing one clock cycle of a CPU.
    */
   tick() {
-    const opcode = Memory.read2(this.memory, this.program_counter.get());
+    const opcode = Memory.read2(this.memory, Register.get(this.program_counter));
     runInstruction(opcode, this);
   }
 }

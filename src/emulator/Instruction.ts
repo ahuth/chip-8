@@ -1,10 +1,10 @@
-import type Register from './Register';
+import * as Register from './Register';
 
 // Is there a good way to get this type from Interpreter.ts without creating a cycle? I could put
 // this definition in another file, and "implement" it in Interpreter.ts. Not sure it's worth going
 // to that trouble, though.
 interface Interpreter {
-  program_counter: Register,
+  program_counter: Register.Register,
 }
 
 interface Instruction {
@@ -20,7 +20,7 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      interpreter.program_counter.set(interpreter.program_counter.get() + 2);
+      Register.set(interpreter.program_counter, Register.get(interpreter.program_counter) + 2);
     },
   },
 
@@ -31,7 +31,7 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      interpreter.program_counter.set(interpreter.program_counter.get() + 2);
+      Register.set(interpreter.program_counter, Register.get(interpreter.program_counter) + 2);
     },
   },
 
@@ -42,7 +42,7 @@ const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       const address = opcode & 0x0FFF;
-      interpreter.program_counter.set(address);
+      Register.set(interpreter.program_counter, address);
     },
   },
 ];

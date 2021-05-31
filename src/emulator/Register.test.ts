@@ -1,52 +1,17 @@
-import Register from './Register';
-
-test('incrementing by 1', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
-
-  register.increment();
-  expect(register.get()).toEqual(1);
-});
-
-test('incrementing by 2', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
-
-  register.increment(2);
-  expect(register.get()).toEqual(2);
-});
-
-test('incrementing past the register size', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
-
-  register.set(0xFF);
-  register.increment();
-  expect(register.get()).toEqual(0);
-});
-
-test('decrementing', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
-
-  register.increment();
-  expect(register.get()).toEqual(1);
-
-  register.decrement();
-  expect(register.get()).toEqual(0);
-});
+import * as Register from './Register';
 
 test('setting a value', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
+  const register = Register.create(8);
+  expect(Register.get(register)).toEqual(0);
 
-  register.set(0xAA);
-  expect(register.get()).toEqual(0xAA);
+  Register.set(register, 0xAA);
+  expect(Register.get(register)).toEqual(0xAA);
 });
 
 test('setting a value greater than the register size', () => {
-  const register = new Register(8);
-  expect(register.get()).toEqual(0);
-  register.set(0x101);
-  expect(register.get()).toEqual(1);
+  const register = Register.create(8);
+  expect(Register.get(register)).toEqual(0);
+
+  Register.set(register, 0x101);
+  expect(Register.get(register)).toEqual(1);
 });

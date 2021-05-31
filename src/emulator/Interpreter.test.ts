@@ -1,3 +1,4 @@
+import * as Register from './Register';
 import Interpreter from './Interpreter';
 
 test('JP', () => {
@@ -7,7 +8,7 @@ test('JP', () => {
     0x16, 0x66,
   ]);
 
-  expect(interpreter.program_counter.get()).toEqual(0x200);
+  expect(Register.get(interpreter.program_counter)).toEqual(0x200);
   interpreter.tick();
-  expect(interpreter.program_counter.get()).toEqual(0x666);
+  expect(Register.get(interpreter.program_counter)).toEqual(0x666);
 });

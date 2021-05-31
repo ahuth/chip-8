@@ -1,29 +1,21 @@
-export default class Register {
-  /** Register size in bits. */
-  private size: 8 | 16;
-  /** Value currenly held in the register. */
-  private value = 0;
-  /** Max value the register can hold. */
-  private maxValue: number;
+export type Register = {
+  readonly maxValue: number,
+  readonly size: 8 | 16,
+  value: number,
+}
 
-  constructor(size: 8 | 16) {
-    this.size = size;
-    this.maxValue = 2**this.size;
-  }
+export function create(size: 8 | 16): Register {
+  return {
+    maxValue: 2 ** size,
+    size,
+    value: 0,
+  };
+}
 
-  increment(by = 1) {
-    this.value = (this.value + by) % this.maxValue;
-  }
+export function set(register: Register, value: number): void {
+  register.value = value % register.maxValue;
+}
 
-  decrement() {
-    this.increment(-1);
-  }
-
-  set(value: number) {
-    this.value = value % this.maxValue;
-  }
-
-  get() {
-    return this.value;
-  }
+export function get(register: Register): number {
+  return register.value;
 }
