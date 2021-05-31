@@ -2,7 +2,7 @@ import * as Register from './Register';
 import * as Interpreter from './Interpreter';
 
 describe('instructions', () => {
-  test('JP', () => {
+  test('1nnn - JP', () => {
     const interpreter = Interpreter.create();
     Interpreter.load(interpreter, [
       // Jump to address 666.
@@ -14,7 +14,7 @@ describe('instructions', () => {
     expect(Register.get(interpreter.program_counter)).toEqual(0x666);
   });
 
-  test('CALL', () => {
+  test('2nnn - CALL', () => {
     const interpreter = Interpreter.create();
     Interpreter.load(interpreter, [
       // Call subroutine at address 345.
