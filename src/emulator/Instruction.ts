@@ -12,6 +12,10 @@ interface Instruction {
   execute: (opcode: number, interpreter: Interpreter) => void,
 }
 
+/**
+ * All instructions that can be executed by this Chip-8 interpreter.
+ * @see https://web.archive.org/web/20160213213233/http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#3.1
+ */
 export const instructions: Instruction[] = [
   // 00E0 - CLS - Clear the display
   {
