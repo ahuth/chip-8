@@ -1,4 +1,3 @@
-import * as Register from './Register';
 import type { Interpreter } from './Interpreter';
 
 interface Instruction {
@@ -31,7 +30,7 @@ export const instructions: Instruction[] = [
       const nextAddress = interpreter.stack.pop();
 
       if (nextAddress) {
-        Register.set(interpreter.program_counter, nextAddress);
+        interpreter.program_counter = nextAddress;
       }
 
       advanceToNextInstruction(interpreter);
@@ -45,7 +44,7 @@ export const instructions: Instruction[] = [
     },
     execute(interpreter, opcode) {
       const address = opcode & 0x0FFF;
-      Register.set(interpreter.program_counter, address);
+      interpreter.program_counter = address;
     },
   },
 
@@ -55,11 +54,11 @@ export const instructions: Instruction[] = [
       return (opcode & 0xF000) === 0x2000;
     },
     execute(interpreter, opcode) {
-      const currentAddress = Register.get(interpreter.program_counter);
+      const currentAddress = interpreter.program_counter;
       const nextAddress = opcode & 0x0FFF;
 
       interpreter.stack.push(currentAddress);
-      Register.set(interpreter.program_counter, nextAddress);
+      interpreter.program_counter = nextAddress;
     },
   },
 ];
@@ -68,7 +67,7 @@ export const instructions: Instruction[] = [
  * Increment an interpreter's program counter so that it's at the next instruction.
  */
 function advanceToNextInstruction(interpreter: Interpreter) {
-  const currentAddress = Register.get(interpreter.program_counter);
+  const currentAddress = interpreter.program_counter;
   const nextAddress = currentAddress + 2;
-  Register.set(interpreter.program_counter, nextAddress);
+  interpreter.program_counter = nextAddress;
 }

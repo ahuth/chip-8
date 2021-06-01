@@ -1,4 +1,3 @@
-import * as Register from './Register';
 import * as Interpreter from './Interpreter';
 
 describe('instructions', () => {
@@ -20,22 +19,22 @@ describe('instructions', () => {
       ]);
 
       // Starts at 0x200.
-      expect(Register.get(interpreter.program_counter)).toEqual(0x200);
+      expect(interpreter.program_counter).toEqual(0x200);
       expect(interpreter.stack).toEqual([]);
 
       // Execute the subroutine call. Should jump to 0x206.
       Interpreter.tick(interpreter);
-      expect(Register.get(interpreter.program_counter)).toEqual(0x206);
+      expect(interpreter.program_counter).toEqual(0x206);
       expect(interpreter.stack).toEqual([0x200]);
 
       // Execute the subroutine's CLS.
       Interpreter.tick(interpreter);
-      expect(Register.get(interpreter.program_counter)).toEqual(0x208);
+      expect(interpreter.program_counter).toEqual(0x208);
       expect(interpreter.stack).toEqual([0x200]);
 
       // Execute the subroutine return. Should go back to where we left off - 0x202
       Interpreter.tick(interpreter);
-      expect(Register.get(interpreter.program_counter)).toEqual(0x202);
+      expect(interpreter.program_counter).toEqual(0x202);
       expect(interpreter.stack).toEqual([]);
     });
   });
@@ -48,9 +47,9 @@ describe('instructions', () => {
         0x16, 0x66,
       ]);
 
-      expect(Register.get(interpreter.program_counter)).toEqual(0x200);
+      expect(interpreter.program_counter).toEqual(0x200);
       Interpreter.tick(interpreter);
-      expect(Register.get(interpreter.program_counter)).toEqual(0x666);
+      expect(interpreter.program_counter).toEqual(0x666);
     });
   });
 
@@ -62,12 +61,12 @@ describe('instructions', () => {
         0x23, 0x45,
       ]);
 
-      expect(Register.get(interpreter.program_counter)).toEqual(0x200);
+      expect(interpreter.program_counter).toEqual(0x200);
       expect(interpreter.stack).toEqual([]);
 
       Interpreter.tick(interpreter);
 
-      expect(Register.get(interpreter.program_counter)).toEqual(0x345);
+      expect(interpreter.program_counter).toEqual(0x345);
       expect(interpreter.stack).toEqual([0x200]);
     });
   });

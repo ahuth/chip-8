@@ -1,6 +1,5 @@
 import {instructions} from './instructions';
 import * as Memory from './Memory';
-import * as Register from './Register';
 
 /**
  * Chip-8 interpreter.
@@ -21,34 +20,34 @@ export function create() {
     stack: [] as number[],
 
     /** 16-bit program counter. Stores the address of the currently executing instruction. */
-    program_counter: Register.create(16),
+    program_counter: 0,
 
     // General purpose 8-bit registers.
-    register_v1: Register.create(8),
-    register_v2: Register.create(8),
-    register_v3: Register.create(8),
-    register_v4: Register.create(8),
-    register_v5: Register.create(8),
-    register_v6: Register.create(8),
-    register_v7: Register.create(8),
-    register_v8: Register.create(8),
-    register_v9: Register.create(8),
-    register_va: Register.create(8),
-    register_vb: Register.create(8),
-    register_vc: Register.create(8),
-    register_vd: Register.create(8),
-    register_ve: Register.create(8),
+    register_v1: 0,
+    register_v2: 0,
+    register_v3: 0,
+    register_v4: 0,
+    register_v5: 0,
+    register_v6: 0,
+    register_v7: 0,
+    register_v8: 0,
+    register_v9: 0,
+    register_va: 0,
+    register_vb: 0,
+    register_vc: 0,
+    register_vd: 0,
+    register_ve: 0,
 
     /** 8-bit register, normally used for flags, and not used by any program. */
-    register_vf: Register.create(8),
+    register_vf: 0,
 
     /** 16-bit register, normally used to store memory addresses. */
-    register_i: Register.create(16),
+    register_i: 0,
 
     /** Delay timer */
-    timer_delay: Register.create(8),
+    timer_delay: 0,
     /** Sound timer */
-    timer_sound: Register.create(8),
+    timer_sound: 0,
   };
 }
 
@@ -59,7 +58,7 @@ export function load(interpreter: Interpreter, program: number[]): void {
   Memory.load(interpreter.memory, program);
   // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
   // let's assume a normal program, and set the program counter accordingly.
-  Register.set(interpreter.program_counter, 0x200);
+  interpreter.program_counter = 0x200;
 }
 
 /**
@@ -67,7 +66,7 @@ export function load(interpreter: Interpreter, program: number[]): void {
  */
 export function tick(interpreter: Interpreter): void {
   // Fetch
-  const currentAddress = Register.get(interpreter.program_counter);
+  const currentAddress = interpreter.program_counter;
   const opcode = Memory.read2(interpreter.memory, currentAddress);
 
   // Decode
