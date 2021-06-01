@@ -28,7 +28,12 @@ export const instructions: Instruction[] = [
       return opcode === 0x00EE;
     },
     execute(opcode, interpreter) {
-      // Not implemented, yet.
+      const nextAddress = interpreter.stack.pop();
+
+      if (nextAddress) {
+        Register.set(interpreter.program_counter, nextAddress);
+      }
+
       advanceToNextInstruction(interpreter);
     },
   },
