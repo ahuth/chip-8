@@ -18,8 +18,7 @@ export const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      const currentAddress = Register.get(interpreter.program_counter);
-      Register.set(interpreter.program_counter, currentAddress + 2);
+      advanceToNextInstruction(interpreter);
     },
   },
 
@@ -30,8 +29,7 @@ export const instructions: Instruction[] = [
     },
     execute(opcode, interpreter) {
       // Not implemented, yet.
-      const currentAddress = Register.get(interpreter.program_counter);
-      Register.set(interpreter.program_counter, currentAddress + 2);
+      advanceToNextInstruction(interpreter);
     },
   },
 
@@ -60,3 +58,12 @@ export const instructions: Instruction[] = [
     },
   },
 ];
+
+/**
+ * Increment an interpreter's program counter so that it's at the next instruction.
+ */
+function advanceToNextInstruction(interpreter: Interpreter) {
+  const currentAddress = Register.get(interpreter.program_counter);
+  const nextAddress = currentAddress + 2;
+  Register.set(interpreter.program_counter, nextAddress);
+}
