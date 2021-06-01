@@ -1,4 +1,4 @@
-import {instructions} from './Instruction';
+import {instructions} from './instructions';
 import * as Memory from './Memory';
 import * as Register from './Register';
 
