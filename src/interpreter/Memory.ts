@@ -30,7 +30,7 @@ export function read1(memory: Memory, address: number): number {
  * @returns 2 bytes
  */
 export function read2(memory: Memory, address: number): number {
-  // Chip-8 is "big endian", so the most significant byte is first.
+  // Chip-8 is "big endian", I think, so the most significant byte is first.
   const hi = read1(memory, address);
   const lo = read1(memory, address + 1);
   // Combine the most and least significant bytes into a single 2-byte number.
