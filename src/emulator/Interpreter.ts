@@ -66,13 +66,17 @@ export function load(interpreter: Interpreter, program: number[]): void {
  * Execute one cycle. This is like executing one clock cycle of a CPU.
  */
 export function tick(interpreter: Interpreter): void {
+  // Fetch
   const currentAddress = Register.get(interpreter.program_counter);
   const opcode = Memory.read2(interpreter.memory, currentAddress);
+
+  // Decode
   const instruction = instructions.find((instruction) => instruction.test(opcode));
 
   if (!instruction) {
     throw new Error(`Unknown opcode: ${opcode}`);
   }
 
+  // Execute
   instruction.execute(opcode, interpreter);
 }
