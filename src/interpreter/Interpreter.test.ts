@@ -6,7 +6,7 @@ describe('instructions', () => {
     it('return from a subroutine', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
-        // Call subroutine at address 0x204. Should return to here when it's done. Address 0x200.
+        // Call subroutine at address 0x206. Should return to here when it's done. Address 0x200.
         0x22, 0x06,
         // Clear the display (just to take up space). Address 0x202.
         0x00, 0xE0,
