@@ -78,5 +78,5 @@ export function tick(interpreter: Interpreter): void {
   }
 
   // Execute
-  instruction.execute(opcode, interpreter);
+  instruction.execute(interpreter, opcode);
 }

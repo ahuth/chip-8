@@ -3,7 +3,7 @@ import type { Interpreter } from './Interpreter';
 
 interface Instruction {
   test: (opcode: number) => boolean,
-  execute: (opcode: number, interpreter: Interpreter) => void,
+  execute: (interpreter: Interpreter, opcode: number) => void,
 }
 
 /**
@@ -16,7 +16,7 @@ export const instructions: Instruction[] = [
     test(opcode) {
       return opcode === 0x00E0;
     },
-    execute(opcode, interpreter) {
+    execute(interpreter) {
       // Not implemented, yet.
       advanceToNextInstruction(interpreter);
     },
@@ -27,7 +27,7 @@ export const instructions: Instruction[] = [
     test(opcode) {
       return opcode === 0x00EE;
     },
-    execute(opcode, interpreter) {
+    execute(interpreter) {
       const nextAddress = interpreter.stack.pop();
 
       if (nextAddress) {
@@ -43,7 +43,7 @@ export const instructions: Instruction[] = [
     test(opcode) {
       return (opcode & 0xF000) === 0x1000;
     },
-    execute(opcode, interpreter) {
+    execute(interpreter, opcode) {
       const address = opcode & 0x0FFF;
       Register.set(interpreter.program_counter, address);
     },
@@ -54,7 +54,7 @@ export const instructions: Instruction[] = [
     test(opcode) {
       return (opcode & 0xF000) === 0x2000;
     },
-    execute(opcode, interpreter) {
+    execute(interpreter, opcode) {
       const currentAddress = Register.get(interpreter.program_counter);
       const nextAddress = opcode & 0x0FFF;
 
