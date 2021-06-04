@@ -301,4 +301,36 @@ describe('instructions', () => {
       expect(interpreter.register_v5).toEqual(0x12);
     });
   });
+
+  describe('8xy1 - OR Vx, Vy', () => {
+    it('stores the bitwise OR of Vx and Vy in Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0xA5 into V1
+        0x61, 0xA5,
+        // Load 0x17 into V2
+        0x62, 0x17,
+        // Compute V1 | V2 and store in V1
+        0x81, 0x21,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0xA5);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0xA5);
+      expect(interpreter.register_v2).toEqual(0x17);
+
+      // Set the 1st register to the OR of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0xB7);
+      expect(interpreter.register_v2).toEqual(0x17);
+    });
+  });
 });
