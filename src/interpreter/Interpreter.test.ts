@@ -2,7 +2,7 @@ import * as Interpreter from './Interpreter';
 
 describe('instructions', () => {
   describe('00EE - RET', () => {
-    it('return from a subroutine', () => {
+    it('returns from a subroutine', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
         // Call subroutine at address 0x206. Should return to here when it's done. Address 0x200.
