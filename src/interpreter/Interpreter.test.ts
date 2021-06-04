@@ -140,7 +140,7 @@ describe('instructions', () => {
       expect(interpreter.program_counter).toEqual(0x206);
     });
 
-    it('does not skip any instructions when Vx -== kk', () => {
+    it('does not skip any instructions when Vx === kk', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
         // Load 0x02 into VA
