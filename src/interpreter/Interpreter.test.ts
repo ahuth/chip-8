@@ -109,7 +109,53 @@ describe('instructions', () => {
       Interpreter.tick(interpreter);
       expect(interpreter.program_counter).toEqual(0x202);
 
+      // The value kk does NOT equal what's in the register, so don't skip the next instruction.
+      // There aren't actually any instructions to skip, but we can tell if this is working based
+      // on where the program counter ends up.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x204);
+    });
+  });
+
+  describe('4xkk - SNE', () => {
+    it('skips the next instruction when the register Vx !== kk', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x02 into VA
+        0x6A, 0x02,
+        // Skip the next instruction if VA equals 0x04
+        0x4A, 0x04,
+      ]);
+
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load the value into the register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x202);
+
       // The value kk does NOT equal what's in the register, so skip the next instruction. There
+      // aren't actually any instructions to skip, but we can tell if this is working based on
+      // where the program counter ends up.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x206);
+    });
+
+    it('does not skip any instructions when Vx -== kk', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x02 into VA
+        0x6A, 0x02,
+        // Skip the next instruction if VA equals 0x02
+        0x4A, 0x02,
+      ]);
+
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load the value into the register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x202);
+
+      // The value kk equals what's in the register, so don't skip the next instruction. There
       // aren't actually any instructions to skip, but we can tell if this is working based on
       // where the program counter ends up.
       Interpreter.tick(interpreter);
