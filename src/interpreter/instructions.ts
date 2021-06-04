@@ -226,6 +226,35 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 8xy4 - ADD Vx, Vy - Add Vx and Vy. If the result is greater than 8 bits, VF is set to 1,
+  // otherwise 0. Only the lowest 8 bits of the result are kept and stored in Vx.
+  {
+    test(opcode) {
+      return (opcode & 0xF00F) === 0x8004;
+    },
+    execute(interpreter, opcode) {
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
+
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
+
+      const registerValueX = interpreter[registerNameX];
+      const registerValueY = interpreter[registerNameY];
+
+      // Add the value stogether. Only keep the lowest 8 bits.
+      const sum = registerValueX + registerValueY;
+      const truncatedSum = sum & 0xFF;
+
+      // Set the truncated value in the register. If the non-truncated sum was greater than 8 bits,
+      // set the carry flag.
+      interpreter[registerNameX] = truncatedSum;
+      interpreter.register_vf = (sum > 0xFF) ? 1 : 0;
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**

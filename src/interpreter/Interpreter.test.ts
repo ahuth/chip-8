@@ -397,4 +397,73 @@ describe('instructions', () => {
       expect(interpreter.register_v3).toEqual(0x17);
     });
   });
+
+  describe('8xy4 - ADD Vx, Vy', () => {
+    it('sets register Vx to Vx + Vy', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x02 into V1
+        0x61, 0x02,
+        // Load 0x03 into V2
+        0x62, 0x03,
+        // Compute V1 + V2 and store in V1
+        0x81, 0x24,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x02);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x02);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Set the 1st register to the sum of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x05);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Carry flag is not set since the sum is less than 8 bits.
+      expect(interpreter.register_vf).toEqual(0);
+    });
+
+    it('keeps the lowest 8 bits and sets the carry flag if the result is greater than 8 bits', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0xFE into V1
+        0x61, 0xFE,
+        // Load 0x03 into V2
+        0x62, 0x03,
+        // Compute V1 + V2 and store in V1
+        0x81, 0x24,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0xFE);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0xFE);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Set the 1st register to the sum of both. Since the result is greater than 8 bits, we only
+      // keep the first 8 bits.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x01);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Carry flag is set since the sum is more than 8 bits.
+      expect(interpreter.register_vf).toEqual(1);
+    });
+  });
 });
