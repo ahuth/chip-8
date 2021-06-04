@@ -190,6 +190,24 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 8xy2 - AND Vx, Vy - Perform bitwise AND on Vx and Vy, then store the result in Vx.
+  {
+    test(opcode) {
+      return (opcode & 0xF00F) === 0x8002;
+    },
+    execute(interpreter, opcode) {
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
+
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
+
+      interpreter[registerNameX] &= interpreter[registerNameY];
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**

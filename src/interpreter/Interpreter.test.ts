@@ -333,4 +333,36 @@ describe('instructions', () => {
       expect(interpreter.register_v2).toEqual(0x17);
     });
   });
+
+  describe('8xy2 - AND Vx, Vy', () => {
+    it('stores the bitwise AND of Vx and Vy in Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0xA5 into V2
+        0x62, 0xA5,
+        // Load 0x17 into V4
+        0x64, 0x17,
+        // Compute V1 & V2 and store in V1
+        0x82, 0x42,
+      ]);
+
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_v4).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v2).toEqual(0xA5);
+      expect(interpreter.register_v4).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v2).toEqual(0xA5);
+      expect(interpreter.register_v4).toEqual(0x17);
+
+      // Set the 1st register to the AND of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v2).toEqual(0x05);
+      expect(interpreter.register_v4).toEqual(0x17);
+    });
+  });
 });
