@@ -73,7 +73,7 @@ export function tick(interpreter: Interpreter): void {
   const instruction = instructions.find((instruction) => instruction.test(opcode));
 
   if (!instruction) {
-    throw new Error(`Unknown opcode: ${opcode}`);
+    throw new Error(`Unknown opcode: 0x${opcode.toString(16)}`);
   }
 
   // Execute
