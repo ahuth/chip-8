@@ -365,4 +365,36 @@ describe('instructions', () => {
       expect(interpreter.register_v4).toEqual(0x17);
     });
   });
+
+  describe('8xy3 - XOR Vx, Vy', () => {
+    it('stores the bitwise XOR of Vx and Vy in Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0xA5 into VA
+        0x6A, 0xA5,
+        // Load 0x17 into V3
+        0x63, 0x17,
+        // Compute V1 & V2 and store in V1
+        0x8A, 0x33,
+      ]);
+
+      expect(interpreter.register_va).toEqual(0);
+      expect(interpreter.register_v3).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_va).toEqual(0xA5);
+      expect(interpreter.register_v3).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_va).toEqual(0xA5);
+      expect(interpreter.register_v3).toEqual(0x17);
+
+      // Set the 1st register to the XOR of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_va).toEqual(0xB2);
+      expect(interpreter.register_v3).toEqual(0x17);
+    });
+  });
 });
