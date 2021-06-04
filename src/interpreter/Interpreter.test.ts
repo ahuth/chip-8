@@ -39,7 +39,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('1nnn - JP', () => {
+  describe('1nnn - JP addr', () => {
     it('jumps to location nnn', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
@@ -53,7 +53,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('2nnn - CALL', () => {
+  describe('2nnn - CALL addr', () => {
     it('calls subroutine at address nnn', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
@@ -71,7 +71,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('3xkk - SE', () => {
+  describe('3xkk - SE Vx, byte', () => {
     it('skips the next instruction when the register Vx === kk', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
@@ -117,7 +117,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('4xkk - SNE', () => {
+  describe('4xkk - SNE Vx, byte', () => {
     it('skips the next instruction when the register Vx !== kk', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
@@ -163,7 +163,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('5xy0 - SE', () => {
+  describe('5xy0 - SE Vx, Vy', () => {
     it('skips the next instruction when the registers Vx and Vy are equal', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [
@@ -221,7 +221,7 @@ describe('instructions', () => {
     });
   });
 
-  describe('6xkk - LD', () => {
+  describe('6xkk - LD Vx, byte', () => {
     it('loads byte kk into register Vx', () => {
       const interpreter = Interpreter.create();
       Interpreter.load(interpreter, [

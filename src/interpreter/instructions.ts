@@ -37,7 +37,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 1nnn - JP - Jump to location nnn
+  // 1nnn - JP addr - Jump to location nnn
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x1000;
@@ -48,7 +48,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 2nnn - CALL - Call subroutine at nnn.
+  // 2nnn - CALL addr - Call subroutine at nnn.
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x2000;
@@ -62,7 +62,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 3xkk - SE - Skip the next instruction if Vx equals kk.
+  // 3xkk - SE Vx, byte - Skip the next instruction if Vx equals kk.
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x3000;
@@ -81,7 +81,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 4xkk - SNE - Skip the next instruction if Vx does NOT equal kk.
+  // 4xkk - SNE Vx, byte - Skip the next instruction if Vx does NOT equal kk.
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x4000;
@@ -100,7 +100,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 5xy0 - SE - Skip the next instruction if Vx equals Vy.
+  // 5xy0 - SE Vx, Vy - Skip the next instruction if Vx equals Vy.
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x5000;
@@ -123,7 +123,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 6xkk - LD - Set Vx to kk.
+  // 6xkk - LD Vx, byte - Set Vx to kk.
   {
     test(opcode) {
       return (opcode & 0xF000) === 0x6000;
