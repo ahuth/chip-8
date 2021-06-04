@@ -278,4 +278,27 @@ describe('instructions', () => {
       expect(interpreter.register_v3).toEqual(0x0D);
     });
   });
+
+  describe('8xy0 - LD Vx, Vy', () => {
+    it('stores the value in register Vy in Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x12 into V5
+        0x65, 0x12,
+        // Store the V5 in V1
+        0x81, 0x50,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v5).toEqual(0);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v5).toEqual(0x12);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x12);
+      expect(interpreter.register_v5).toEqual(0x12);
+    });
+  });
 });
