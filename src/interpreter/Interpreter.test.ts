@@ -163,6 +163,64 @@ describe('instructions', () => {
     });
   });
 
+  describe('5xy0 - SE', () => {
+    it('skips the next instruction when the registers Vx and Vy are equal', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x1A into V1
+        0x61, 0x1A,
+        // Load 0x1A into V2
+        0x62, 0x1A,
+        // Skip the next instruction if V1 equals V2
+        0x51, 0x20,
+      ]);
+
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load the value into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x202);
+
+      // Load the value into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x204);
+
+      // The value in V1 and V2 are the same, so skip the next instruction. There aren't actually
+      // any instructions to skip, but we can tell if this is working based on where the program
+      // counter ends up.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x208);
+    });
+
+    it('does not skip any instructions when Vx and Vy are different', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x1A into V1
+        0x61, 0x1A,
+        // Load 0x1B into V2
+        0x62, 0x1B,
+        // Skip the next instruction if V1 equals V2
+        0x51, 0x20,
+      ]);
+
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load the value into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x202);
+
+      // Load the value into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x204);
+
+      // The value in V1 and V2 are the different, so skip the next instruction. There aren't
+      // actually any instructions to skip, but we can tell if this is working based on where the
+      // program counter ends up.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x206);
+    });
+  });
+
   describe('6xkk - LD', () => {
     it('loads byte kk into register Vx', () => {
       const interpreter = Interpreter.create();

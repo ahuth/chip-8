@@ -100,6 +100,29 @@ export const instructions: Instruction[] = [
     },
   },
 
+  // 5xy0 - SE - Skip the next instruction if Vx equals Vy.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0x5000;
+    },
+    execute(interpreter, opcode) {
+      const registerId1 = (opcode & 0x0F00) >> 8;
+      const registerId2 = (opcode & 0x00F0) >> 4;
+
+      const registerName1 = getRegisterFromId(registerId1);
+      const registerName2 = getRegisterFromId(registerId2);
+
+      const registerValue1 = interpreter[registerName1];
+      const registerValue2 = interpreter[registerName2];
+
+      if (registerValue1 === registerValue2) {
+        advanceToNextInstruction(interpreter);
+      }
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
+
   // 6xkk - LD - Set Vx to kk.
   {
     test(opcode) {
