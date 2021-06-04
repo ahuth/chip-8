@@ -62,6 +62,25 @@ export const instructions: Instruction[] = [
     },
   },
 
+  // 3xkk - SE - Skip the next instruction if Vx equals kk.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0x3000;
+    },
+    execute(interpreter, opcode) {
+      const registerId = (opcode & 0x0F00) >> 8;
+      const registerName = getRegisterFromId(registerId);
+      const registerValue = interpreter[registerName];
+      const providedValue = opcode & 0x00FF;
+
+      if (registerValue === providedValue) {
+        advanceToNextInstruction(interpreter);
+      }
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
+
   // 6xkk - LD - Set Vx to kk.
   {
     test(opcode) {
