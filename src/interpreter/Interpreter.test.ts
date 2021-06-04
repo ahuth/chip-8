@@ -253,4 +253,29 @@ describe('instructions', () => {
       expect(interpreter.register_vc).toEqual(0x24);
     });
   });
+
+  describe('7xkk - ADD Vx, byte', () => {
+    it('adds kk to register Vx and stores the result in Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x0A into V3
+        0x63, 0x0A,
+        // Add 1 to V3
+        0x73, 0x01,
+        // Add 2 to V3
+        0x73, 0x02,
+      ]);
+
+      expect(interpreter.register_v3).toEqual(0);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v3).toEqual(0x0A);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v3).toEqual(0x0B);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v3).toEqual(0x0D);
+    });
+  });
 });

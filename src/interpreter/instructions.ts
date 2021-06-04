@@ -138,6 +138,22 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 7xkk - ADD Vx, byte - Add the value kk to Vx and store the result in Vx.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0x7000;
+    },
+    execute(interpreter, opcode) {
+      const registerId = (opcode & 0x0F00) >> 8;
+      const registerName = getRegisterFromId(registerId);
+      const addend = opcode & 0x00FF;
+
+      interpreter[registerName] += addend;
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**
