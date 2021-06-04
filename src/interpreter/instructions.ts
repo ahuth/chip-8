@@ -106,16 +106,16 @@ export const instructions: Instruction[] = [
       return (opcode & 0xF000) === 0x5000;
     },
     execute(interpreter, opcode) {
-      const registerId1 = (opcode & 0x0F00) >> 8;
-      const registerId2 = (opcode & 0x00F0) >> 4;
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
 
-      const registerName1 = getRegisterFromId(registerId1);
-      const registerName2 = getRegisterFromId(registerId2);
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
 
-      const registerValue1 = interpreter[registerName1];
-      const registerValue2 = interpreter[registerName2];
+      const registerValueX = interpreter[registerNameX];
+      const registerValueY = interpreter[registerNameY];
 
-      if (registerValue1 === registerValue2) {
+      if (registerValueX === registerValueY) {
         advanceToNextInstruction(interpreter);
       }
 
