@@ -466,4 +466,107 @@ describe('instructions', () => {
       expect(interpreter.register_vf).toEqual(1);
     });
   });
+
+  describe('8xy5 - SUB Vx, Vy', () => {
+    it('sets register Vx to Vx - Vy', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x05 into V1
+        0x61, 0x05,
+        // Load 0x03 into V2
+        0x62, 0x03,
+        // Compute V1 - V2 and store in V1
+        0x81, 0x25,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x05);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x05);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Set the 1st register to the sum of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x02);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // NOT borrow flag is set since Vx was > Vy.
+      expect(interpreter.register_vf).toEqual(1);
+    });
+
+    it('sets the NOT borrow flag when Vx equals Vy', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x03 into V1
+        0x61, 0x03,
+        // Load 0x03 into V2
+        0x62, 0x03,
+        // Compute V1 - V2 and store in V1
+        0x81, 0x25,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // Set the 1st register to the sum of both.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0x03);
+
+      // NOT borrow flag is set since Vx was equal to Vy.
+      expect(interpreter.register_vf).toEqual(1);
+    });
+
+    it('clears the NOT borrow flag when Vx is less than Vy', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x03 into V1
+        0x61, 0x03,
+        // Load 0x05 into V2
+        0x62, 0x05,
+        // Compute V1 - V2 and store in V1
+        0x81, 0x25,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0);
+
+      // Load into 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0x05);
+
+      // Set the 1st register to the sum of both.
+      Interpreter.tick(interpreter);
+      // Not completely sure if the value should be negative here or not. My gut tells me no, but
+      // I can't find any information on this online.
+      expect(interpreter.register_v1).toEqual(-2);
+      expect(interpreter.register_v2).toEqual(0x05);
+
+      // Not borrow flag is cleared since Vx was < Vy.
+      expect(interpreter.register_vf).toEqual(0);
+    });
+  });
 });

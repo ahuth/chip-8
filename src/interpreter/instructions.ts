@@ -227,8 +227,8 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 8xy4 - ADD Vx, Vy - Add Vx and Vy. If the result is greater than 8 bits, VF is set to 1,
-  // otherwise 0. Only the lowest 8 bits of the result are kept and stored in Vx.
+  // 8xy4 - ADD Vx, Vy - Add Vx and Vy. If the result is greater than 8 bits, set Vf (the carry
+  // flag) to 1, otherwise 0. Only the lowest 8 bits of the result are kept and stored in Vx.
   {
     test(opcode) {
       return (opcode & 0xF00F) === 0x8004;
@@ -251,6 +251,34 @@ export const instructions: Instruction[] = [
       // set the carry flag.
       interpreter[registerNameX] = truncatedSum;
       interpreter.register_vf = (sum > 0xFF) ? 1 : 0;
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
+
+  // 8xy5 - SUB Vx, Vy - Subtract Vy from Vx and store the result in Vx. Set Vf (the NOT borrow
+  // flag) to 1 if Vx >= Vy.
+  {
+    test(opcode) {
+      return (opcode & 0xF00F) === 0x8005;
+    },
+    execute(interpreter, opcode) {
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
+
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
+
+      const registerValueX = interpreter[registerNameX];
+      const registerValueY = interpreter[registerNameY];
+
+      // Subtract the values.
+      const difference = registerValueX - registerValueY;
+      interpreter[registerNameX] = difference;
+
+      // Set the NOT Borrow flag. The correct logic is >= (instead of >) according to
+      // https://ia803208.us.archive.org/29/items/bitsavers_rcacosmacCManual1978_6956559/COSMAC_VIP_Instruction_Manual_1978.pdf
+      interpreter.register_vf = (registerValueX >= registerValueY) ? 1 : 0;
 
       advanceToNextInstruction(interpreter);
     },
