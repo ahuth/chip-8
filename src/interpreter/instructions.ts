@@ -274,7 +274,8 @@ export const instructions: Instruction[] = [
 
       // Subtract the values.
       const difference = registerValueX - registerValueY;
-      interpreter[registerNameX] = difference;
+      // Only store the 8 lowest bits. Not 100% sure if this correct.
+      interpreter[registerNameX] = difference & 0xFF;
 
       // Set the NOT Borrow flag. The correct logic is >= (instead of >) according to
       // https://ia803208.us.archive.org/29/items/bitsavers_rcacosmacCManual1978_6956559/COSMAC_VIP_Instruction_Manual_1978.pdf

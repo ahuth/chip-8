@@ -560,9 +560,7 @@ describe('instructions', () => {
 
       // Set the 1st register to the sum of both.
       Interpreter.tick(interpreter);
-      // Not completely sure if the value should be negative here or not. My gut tells me no, but
-      // I can't find any information on this online.
-      expect(interpreter.register_v1).toEqual(-2);
+      expect(interpreter.register_v1).toEqual(0xFF - 1);
       expect(interpreter.register_v2).toEqual(0x05);
 
       // Not borrow flag is cleared since Vx was < Vy.
