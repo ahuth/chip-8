@@ -567,4 +567,48 @@ describe('instructions', () => {
       expect(interpreter.register_vf).toEqual(0);
     });
   });
+
+  describe('8xy6 - SHR Vx', () => {
+    it('stores the least significant bit of Vx in Vf and shifts Vx to right', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0xAB (which has a least significant bit of 1) into VD.
+        0x6D, 0xAB,
+        // Load 0xAA (which has a least significant bit of 0) into V4.
+        0x64, 0xAA,
+        // Right shift VD.
+        0x8D, 0x06,
+        // Right shift V4.
+        0x84, 0x06,
+      ]);
+
+      expect(interpreter.register_vd).toEqual(0);
+      expect(interpreter.register_v4).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_vd).toEqual(0xAB);
+      expect(interpreter.register_v4).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_vd).toEqual(0xAB);
+      expect(interpreter.register_v4).toEqual(0xAA);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Right shift the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_vd).toEqual(0x55); // 0xAB >> 1
+      expect(interpreter.register_v4).toEqual(0xAA);
+      expect(interpreter.register_vf).toEqual(1);    // 0xAB ends with 1
+
+      // Right shift the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_vd).toEqual(0x55);
+      expect(interpreter.register_v4).toEqual(0x55); // 0xAA >> 1
+      expect(interpreter.register_vf).toEqual(0);    // 0xAA ends with 0
+    });
+  });
 });

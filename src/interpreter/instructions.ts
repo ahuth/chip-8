@@ -284,6 +284,26 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 8xy6 - SHR Vx - Set VF to the least significant bit of Vx, and shift Vx to the right 1
+  // (essentially divide it in half).
+  {
+    test(opcode) {
+      return (opcode & 0xF00F) === 0x8006;
+    },
+    execute(interpreter, opcode) {
+      const registerId = (opcode & 0x0F00) >> 8;
+      const registerName = getRegisterFromId(registerId);
+
+      // Set Vf to the least significant bit of Vx.
+      interpreter.register_vf = interpreter[registerName] & 0b0000_0001;
+
+      // Right shift.
+      interpreter[registerName] >>= 1;
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**
