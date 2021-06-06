@@ -611,4 +611,40 @@ describe('instructions', () => {
       expect(interpreter.register_vf).toEqual(0);    // 0xAA ends with 0
     });
   });
+
+  describe('8xy7 - SUBN Vx, Vy', () => {
+    it('sets register Vx to Vy - Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x03 into V1.
+        0x61, 0x03,
+        // Load 0x05 into V2.
+        0x62, 0x05,
+        // Subtract V2 from V1.
+        0x81, 0x27,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0x05);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Set V1 to V2 - V1
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x02);
+      expect(interpreter.register_v2).toEqual(0x05);
+      expect(interpreter.register_vf).toEqual(1); // Not borrow flag
+    });
+  });
 });

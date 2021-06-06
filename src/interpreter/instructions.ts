@@ -304,6 +304,32 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 8xy7 - SUBN Vx, Vy - Set Vx to Vy - Vx, and Vf (the not borrow flag) to Vy >= Vx.
+  {
+    test(opcode) {
+      return (opcode & 0xF00F) === 0x8007;
+    },
+    execute(interpreter, opcode) {
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
+
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
+
+      const registerValueX = interpreter[registerNameX];
+      const registerValueY = interpreter[registerNameY];
+
+      // Subtract the values.
+      const difference = registerValueY - registerValueX;
+      // Store the lowest 8 bits.
+      interpreter[registerNameX] = difference & 0xFF;
+      // Set the NOT borrow flag.
+      interpreter.register_vf = (registerValueY >= registerValueX) ? 1 : 0;
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**
