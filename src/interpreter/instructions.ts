@@ -256,8 +256,7 @@ export const instructions: Instruction[] = [
     },
   },
 
-  // 8xy5 - SUB Vx, Vy - Subtract Vy from Vx and store the result in Vx. Set Vf (the NOT borrow
-  // flag) to 1 if Vx >= Vy.
+  // 8xy5 - SUB Vx, Vy - Set Vx to Vx - Vy, and Vf (the not borrow flag) to Vx >= Vy.
   {
     test(opcode) {
       return (opcode & 0xF00F) === 0x8005;
