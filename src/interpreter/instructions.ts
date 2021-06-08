@@ -349,6 +349,29 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // 9xy0 - SNE Vx, Vy - Skip the next instruction if Vx does NOT equal Vy.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0x9000;
+    },
+    execute(interpreter, opcode) {
+      const registerIdX = (opcode & 0x0F00) >> 8;
+      const registerIdY = (opcode & 0x00F0) >> 4;
+
+      const registerNameX = getRegisterFromId(registerIdX);
+      const registerNameY = getRegisterFromId(registerIdY);
+
+      const registerValueX = interpreter[registerNameX];
+      const registerValueY = interpreter[registerNameY];
+
+      if (registerValueX !== registerValueY) {
+        advanceToNextInstruction(interpreter);
+      }
+
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**

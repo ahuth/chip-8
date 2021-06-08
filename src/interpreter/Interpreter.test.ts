@@ -714,4 +714,58 @@ describe('instructions', () => {
       expect(interpreter.register_vf).toEqual(1);    // 0xDB ends with 1
     });
   });
+
+  describe('9xy0 - SNE Vx, Vy', () => {
+    it('skips the next instruction if Vx != Vy', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x01 into V1.
+        0x61, 0x01,
+        // Load 0x01 into V2.
+        0x62, 0x01,
+        // Load 0x02 into V3.
+        0x63, 0x02,
+        // Skip the next instruction if V1 does not equal V2.
+        0x91, 0x20,
+        // Skip the next instruction if V1 does not equal V3.
+        0x91, 0x30,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x01);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.program_counter).toEqual(0x202);
+
+      // Load into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x01);
+      expect(interpreter.register_v2).toEqual(0x01);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.program_counter).toEqual(0x204);
+
+      // Load into the 3rd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x01);
+      expect(interpreter.register_v2).toEqual(0x01);
+      expect(interpreter.register_v3).toEqual(0x02);
+      expect(interpreter.program_counter).toEqual(0x206);
+
+      // V1 equals v2, so no instructions should be skipped. We no none were skipped because the
+      // program counter is incremented by 2.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x208);
+
+      // V1 does not equal v3, so an instruction should be skipped. We know one was skipped because
+      // the program counter is incremented by 4.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x20C);
+    });
+  });
 });
