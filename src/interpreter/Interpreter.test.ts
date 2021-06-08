@@ -805,4 +805,19 @@ describe('instructions', () => {
       expect(interpreter.program_counter).toEqual(0x517);
     });
   });
+
+  describe('Cxkk - RND Vx, kk', () => {
+    it('generates a random number, ANDs it with the byte kk, and stores it in register Vx', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Store in V9 a random number AND 0x15.
+        0xC9, 0x15,
+      ]);
+
+      expect(interpreter.register_v9).toEqual(0);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v9).toEqual(expect.any(Number));
+    });
+  });
 });

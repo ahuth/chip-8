@@ -1,3 +1,4 @@
+import random from 'lodash/random';
 import type { Interpreter } from './Interpreter';
 
 interface Instruction {
@@ -394,6 +395,20 @@ export const instructions: Instruction[] = [
       const address = (opcode & 0x0FFF);
       const jumpTo = (address + interpreter.register_v0) & 0xFFF;
       interpreter.program_counter = jumpTo;
+    },
+  },
+
+  // Cxkk - RND Vx, kk - Set Vx to a random byte AND kk.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0xC000;
+    },
+    execute(interpreter, opcode) {
+      const registerId = (opcode & 0x0F00) >> 8;
+      const registerName = getRegisterFromId(registerId);
+      const byte = opcode & 0x00FF;
+      interpreter[registerName] = random(0xFF) && byte;
+      advanceToNextInstruction(interpreter);
     },
   },
 ];
