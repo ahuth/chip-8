@@ -647,4 +647,71 @@ describe('instructions', () => {
       expect(interpreter.register_vf).toEqual(1); // Not borrow flag
     });
   });
+
+  describe('8xyE - SHL Vx', () => {
+    it('stores the least significant bit of Vx in Vf and shifts Vx to left', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x03 (which has a least significant bit of 1) into V1.
+        0x61, 0x03,
+        // Load 0x04 (which has a least significant bit of 0) into V2.
+        0x62, 0x04,
+        // Load 0xDB into V3.
+        0x63, 0xDB,
+        // Left shift V1.
+        0x81, 0x0E,
+        // Left shift V2.
+        0x82, 0x0E,
+        // Left shift v3.
+        0x83, 0x0E,
+      ]);
+
+      expect(interpreter.register_v1).toEqual(0);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0x04);
+      expect(interpreter.register_v3).toEqual(0);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Load into the 3rd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x03);
+      expect(interpreter.register_v2).toEqual(0x04);
+      expect(interpreter.register_v3).toEqual(0xDB);
+      expect(interpreter.register_vf).toEqual(0);
+
+      // Right shift the 1st register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x06); // 0x03 << 1
+      expect(interpreter.register_v2).toEqual(0x04);
+      expect(interpreter.register_v3).toEqual(0xDB);
+      expect(interpreter.register_vf).toEqual(1);    // 0x03 ends with 1
+
+      // Right shift the 2nd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x06);
+      expect(interpreter.register_v2).toEqual(0x08); // 0x04 << 1
+      expect(interpreter.register_v3).toEqual(0xDB);
+      expect(interpreter.register_vf).toEqual(0);    // 0x04 ends with 0
+
+      // Right shift the 3rd register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_v1).toEqual(0x06);
+      expect(interpreter.register_v2).toEqual(0x08);
+      expect(interpreter.register_v3).toEqual(0xB6); // First 8 bits of 0xDB << 1
+      expect(interpreter.register_vf).toEqual(1);    // 0xDB ends with 1
+    });
+  });
 });
