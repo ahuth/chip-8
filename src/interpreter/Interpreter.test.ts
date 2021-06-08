@@ -768,4 +768,19 @@ describe('instructions', () => {
       expect(interpreter.program_counter).toEqual(0x20C);
     });
   });
+
+  describe('Annn - LD I, nnn', () => {
+    it('sets register I to the value nnn (usually a 12-bit memory address)', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x246 into register I.
+        0xA2, 0x46,
+      ]);
+
+      expect(interpreter.register_i).toEqual(0);
+
+      Interpreter.tick(interpreter);
+      expect(interpreter.register_i).toEqual(0x246);
+    });
+  });
 });

@@ -372,6 +372,18 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // Annn - LD I, nnn - Set VI to nnn (usually a 12-bit memory address).
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0xA000;
+    },
+    execute(interpreter, opcode) {
+      const address = (opcode & 0x0FFF);
+      interpreter.register_i = address;
+      advanceToNextInstruction(interpreter);
+    },
+  },
 ];
 
 /**
