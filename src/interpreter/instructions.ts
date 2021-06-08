@@ -384,6 +384,18 @@ export const instructions: Instruction[] = [
       advanceToNextInstruction(interpreter);
     },
   },
+
+  // Bnnn - JP I, nnn - Jump to address nnn + the value in V0.
+  {
+    test(opcode) {
+      return (opcode & 0xF000) === 0xB000;
+    },
+    execute(interpreter, opcode) {
+      const address = (opcode & 0x0FFF);
+      const jumpTo = (address + interpreter.register_v0) & 0xFFF;
+      interpreter.program_counter = jumpTo;
+    },
+  },
 ];
 
 /**
@@ -402,6 +414,8 @@ function advanceToNextInstruction(interpreter: Interpreter) {
  */
 function getRegisterFromId(id: number) {
   switch (id) {
+    case 0:
+      return 'register_v0';
     case 1:
       return 'register_v1';
     case 2:

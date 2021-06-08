@@ -23,6 +23,7 @@ export function create() {
     program_counter: 0,
 
     // General purpose 8-bit registers.
+    register_v0: 0,
     register_v1: 0,
     register_v2: 0,
     register_v3: 0,

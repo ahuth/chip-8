@@ -783,4 +783,26 @@ describe('instructions', () => {
       expect(interpreter.register_i).toEqual(0x246);
     });
   });
+
+  describe('Bnnn - JP V0, nnnn', () => {
+    it('sets register I to the value nnn + V0', () => {
+      const interpreter = Interpreter.create();
+      Interpreter.load(interpreter, [
+        // Load 0x07 into register V0.
+        0x60, 0x07,
+        // Jump to 0x510 + V0.
+        0xB5, 0x10,
+      ]);
+
+      expect(interpreter.program_counter).toEqual(0x200);
+
+      // Load value into the register.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x202);
+
+      // Jump.
+      Interpreter.tick(interpreter);
+      expect(interpreter.program_counter).toEqual(0x517);
+    });
+  });
 });
