@@ -1,4 +1,5 @@
 import {instructions} from './instructions';
+import * as Display from './Display';
 import * as Memory from './Memory';
 
 /**
@@ -12,6 +13,7 @@ export type Interpreter = ReturnType<typeof create>;
  */
 export function create() {
   return {
+    display: Display.create(),
     memory: Memory.create(),
 
     /**
