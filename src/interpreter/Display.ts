@@ -53,7 +53,7 @@ export function create() {
 }
 
 /**
- * "Draw" a sprite (which can be 1 to 15 bytes) to a display. Sprites off the screen will wrap.
+ * Draw a sprite (which can be 1 to 15 bytes) to a display by XOR-ing with what's already there.
  * Returns true if any pixels are erased.
  */
 export function set(display: Display, x: number, y: number, bytes: number[]): boolean {
@@ -70,14 +70,17 @@ export function set(display: Display, x: number, y: number, bytes: number[]): bo
       const destinationX = (x + bitIndex) % 64;
       const destinationY = (y + byteIndex) % 32;
 
-      // Determine if we've erased a pixel.
+      // Calculate the next value via XOR.
       const currentBit = get(display, destinationX, destinationY);
-      if (currentBit === 1 && spriteBit === 0) {
+      const nextBit = currentBit ^ spriteBit;
+
+      // Determine if we've erased a pixel.
+      if (currentBit === 1 && nextBit === 0) {
         erased = true;
       }
 
       // Set the value.
-      display[destinationY][destinationX] = spriteBit;
+      display[destinationY][destinationX] = nextBit;
     });
   });
 

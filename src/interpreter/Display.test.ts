@@ -88,8 +88,8 @@ test('erasing pixels', () => {
   expect(Display.get(display, 1, 0)).toEqual(0);
   expect(Display.get(display, 2, 0)).toEqual(0);
   expect(Display.get(display, 3, 0)).toEqual(0);
-  expect(Display.get(display, 4, 0)).toEqual(0);
-  expect(Display.get(display, 5, 0)).toEqual(1);
+  expect(Display.get(display, 4, 0)).toEqual(1);
+  expect(Display.get(display, 5, 0)).toEqual(0); // 0, not 1, because bits are set via XOR. This is also the bit that is erased.
   expect(Display.get(display, 6, 0)).toEqual(1);
   expect(Display.get(display, 7, 0)).toEqual(0);
 });
