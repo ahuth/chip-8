@@ -1,8 +1,8 @@
-import * as Display from './Display';
+import Display from './Display';
 
 test('drawing a sprite', () => {
-  const display = Display.create();
-  const didErase = Display.set(display, 1, 2, [
+  const display = new Display();
+  const didErase = display.draw(1, 2, [
     0b1100_0101,
     0b0110_1111,
   ]);
@@ -10,29 +10,29 @@ test('drawing a sprite', () => {
   expect(didErase).toEqual(false);
 
   // 1st byte
-  expect(Display.get(display, 1, 2)).toEqual(1);
-  expect(Display.get(display, 2, 2)).toEqual(1);
-  expect(Display.get(display, 3, 2)).toEqual(0);
-  expect(Display.get(display, 4, 2)).toEqual(0);
-  expect(Display.get(display, 5, 2)).toEqual(0);
-  expect(Display.get(display, 6, 2)).toEqual(1);
-  expect(Display.get(display, 7, 2)).toEqual(0);
-  expect(Display.get(display, 8, 2)).toEqual(1);
+  expect(display.get(1, 2)).toEqual(1);
+  expect(display.get(2, 2)).toEqual(1);
+  expect(display.get(3, 2)).toEqual(0);
+  expect(display.get(4, 2)).toEqual(0);
+  expect(display.get(5, 2)).toEqual(0);
+  expect(display.get(6, 2)).toEqual(1);
+  expect(display.get(7, 2)).toEqual(0);
+  expect(display.get(8, 2)).toEqual(1);
 
   // 2nd byte
-  expect(Display.get(display, 1, 3)).toEqual(0);
-  expect(Display.get(display, 2, 3)).toEqual(1);
-  expect(Display.get(display, 3, 3)).toEqual(1);
-  expect(Display.get(display, 4, 3)).toEqual(0);
-  expect(Display.get(display, 5, 3)).toEqual(1);
-  expect(Display.get(display, 6, 3)).toEqual(1);
-  expect(Display.get(display, 7, 3)).toEqual(1);
-  expect(Display.get(display, 8, 3)).toEqual(1);
+  expect(display.get(1, 3)).toEqual(0);
+  expect(display.get(2, 3)).toEqual(1);
+  expect(display.get(3, 3)).toEqual(1);
+  expect(display.get(4, 3)).toEqual(0);
+  expect(display.get(5, 3)).toEqual(1);
+  expect(display.get(6, 3)).toEqual(1);
+  expect(display.get(7, 3)).toEqual(1);
+  expect(display.get(8, 3)).toEqual(1);
 });
 
 test('wrapping', () => {
-  const display = Display.create();
-  const didErase = Display.set(display, 58, 31, [
+  const display = new Display();
+  const didErase = display.draw(58, 31, [
     0b1111_1111,
     0b1111_1111,
   ]);
@@ -40,56 +40,56 @@ test('wrapping', () => {
   expect(didErase).toEqual(false);
 
   // 1st byte
-  expect(Display.get(display, 58, 31)).toEqual(1);
-  expect(Display.get(display, 59, 31)).toEqual(1);
-  expect(Display.get(display, 60, 31)).toEqual(1);
-  expect(Display.get(display, 61, 31)).toEqual(1);
-  expect(Display.get(display, 62, 31)).toEqual(1);
-  expect(Display.get(display, 63, 31)).toEqual(1);
-  expect(Display.get(display, 0, 31)).toEqual(1);
-  expect(Display.get(display, 1, 31)).toEqual(1);
+  expect(display.get(58, 31)).toEqual(1);
+  expect(display.get(59, 31)).toEqual(1);
+  expect(display.get(60, 31)).toEqual(1);
+  expect(display.get(61, 31)).toEqual(1);
+  expect(display.get(62, 31)).toEqual(1);
+  expect(display.get(63, 31)).toEqual(1);
+  expect(display.get(0, 31)).toEqual(1);
+  expect(display.get(1, 31)).toEqual(1);
 
   // 2nd byte
-  expect(Display.get(display, 58, 0)).toEqual(1);
-  expect(Display.get(display, 59, 0)).toEqual(1);
-  expect(Display.get(display, 60, 0)).toEqual(1);
-  expect(Display.get(display, 61, 0)).toEqual(1);
-  expect(Display.get(display, 62, 0)).toEqual(1);
-  expect(Display.get(display, 63, 0)).toEqual(1);
-  expect(Display.get(display, 0, 0)).toEqual(1);
-  expect(Display.get(display, 1, 0)).toEqual(1);
+  expect(display.get(58, 0)).toEqual(1);
+  expect(display.get(59, 0)).toEqual(1);
+  expect(display.get(60, 0)).toEqual(1);
+  expect(display.get(61, 0)).toEqual(1);
+  expect(display.get(62, 0)).toEqual(1);
+  expect(display.get(63, 0)).toEqual(1);
+  expect(display.get(0, 0)).toEqual(1);
+  expect(display.get(1, 0)).toEqual(1);
 });
 
 test('erasing pixels', () => {
-  const display = Display.create();
+  const display = new Display();
 
-  const didErase1 = Display.set(display, 0, 0, [
+  const didErase1 = display.draw(0, 0, [
     0b0000_1100,
   ]);
 
   expect(didErase1).toEqual(false);
 
-  expect(Display.get(display, 0, 0)).toEqual(0);
-  expect(Display.get(display, 1, 0)).toEqual(0);
-  expect(Display.get(display, 2, 0)).toEqual(0);
-  expect(Display.get(display, 3, 0)).toEqual(0);
-  expect(Display.get(display, 4, 0)).toEqual(1);
-  expect(Display.get(display, 5, 0)).toEqual(1);
-  expect(Display.get(display, 6, 0)).toEqual(0);
-  expect(Display.get(display, 7, 0)).toEqual(0);
+  expect(display.get(0, 0)).toEqual(0);
+  expect(display.get(1, 0)).toEqual(0);
+  expect(display.get(2, 0)).toEqual(0);
+  expect(display.get(3, 0)).toEqual(0);
+  expect(display.get(4, 0)).toEqual(1);
+  expect(display.get(5, 0)).toEqual(1);
+  expect(display.get(6, 0)).toEqual(0);
+  expect(display.get(7, 0)).toEqual(0);
 
-  const didErase2 = Display.set(display, 0, 0, [
+  const didErase2 = display.draw(0, 0, [
     0b0000_0110,
   ]);
 
   expect(didErase2).toEqual(true);
 
-  expect(Display.get(display, 0, 0)).toEqual(0);
-  expect(Display.get(display, 1, 0)).toEqual(0);
-  expect(Display.get(display, 2, 0)).toEqual(0);
-  expect(Display.get(display, 3, 0)).toEqual(0);
-  expect(Display.get(display, 4, 0)).toEqual(1);
-  expect(Display.get(display, 5, 0)).toEqual(0); // 0, not 1, because bits are set via XOR. This is also the bit that is erased.
-  expect(Display.get(display, 6, 0)).toEqual(1);
-  expect(Display.get(display, 7, 0)).toEqual(0);
+  expect(display.get(0, 0)).toEqual(0);
+  expect(display.get(1, 0)).toEqual(0);
+  expect(display.get(2, 0)).toEqual(0);
+  expect(display.get(3, 0)).toEqual(0);
+  expect(display.get(4, 0)).toEqual(1);
+  expect(display.get(5, 0)).toEqual(0); // 0, not 1, because bits are set via XOR. This is also the bit that is erased.
+  expect(display.get(6, 0)).toEqual(1);
+  expect(display.get(7, 0)).toEqual(0);
 });

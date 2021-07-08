@@ -10,13 +10,8 @@
  *
  * @see http://devernay.free.fr/hacks/chip8/C8TECH10.HTM#2.4
  */
-export type Display = ReturnType<typeof create>;
-
-/**
- * Create a new display.
- */
-export function create() {
-  return [
+export default class Display {
+  data = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -50,46 +45,46 @@ export function create() {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
-}
 
-/**
- * Draw a sprite (which can be 1 to 15 bytes) to a display by XOR-ing with what's already there.
- * Returns true if any pixels are erased.
- */
-export function set(display: Display, x: number, y: number, bytes: number[]): boolean {
-  let erased = false;
+  /**
+   * Get the pixel value (0 or 1) at a coordinate.
+   */
+  get(x: number, y: number): number {
+    return this.data[y][x];
+  }
 
-  // Iterate each byte in the sprite. Each one is basically a "row".
-  bytes.forEach(function (byte, byteIndex) {
-    // Iterate each bit in the byte. Do it the easy way by converting to a string and iterating its
-    // characters.
-    const byteString = byte.toString(2).padStart(8, '0');
-    byteString.split('').map(Number).forEach(function (spriteBit, bitIndex) {
-      // Determine where this pixel will be drawn. Wrap if necessary around the edges of the
-      // display if necessary.
-      const destinationX = (x + bitIndex) % 64;
-      const destinationY = (y + byteIndex) % 32;
+  /**
+   * Draw a sprite (which can be 1 to 15 bytes) to a display by XOR-ing with what's already there.
+   * Returns true if any pixels are erased.
+   */
+  draw(x: number, y: number, bytes: number[]): boolean {
+    let erased = false;
 
-      // Calculate the next value via XOR.
-      const currentBit = get(display, destinationX, destinationY);
-      const nextBit = currentBit ^ spriteBit;
+    // Iterate each byte in the sprite. Each one is basically a "row".
+    bytes.forEach((byte, byteIndex) => {
+      // Iterate each bit in the byte. Do it the easy way by converting to a string and iterating its
+      // characters.
+      const byteString = byte.toString(2).padStart(8, '0');
+      byteString.split('').map(Number).forEach((spriteBit, bitIndex) => {
+        // Determine where this pixel will be drawn. Wrap if necessary around the edges of the
+        // display if necessary.
+        const destinationX = (x + bitIndex) % 64;
+        const destinationY = (y + byteIndex) % 32;
 
-      // Determine if we've erased a pixel.
-      if (currentBit === 1 && nextBit === 0) {
-        erased = true;
-      }
+        // Calculate the next value via XOR.
+        const currentBit = this.get(destinationX, destinationY);
+        const nextBit = currentBit ^ spriteBit;
 
-      // Set the value.
-      display[destinationY][destinationX] = nextBit;
+        // Determine if we've erased a pixel.
+        if (currentBit === 1 && nextBit === 0) {
+          erased = true;
+        }
+
+        // Set the value.
+        this.data[destinationY][destinationX] = nextBit;
+      });
     });
-  });
 
-  return erased;
-}
-
-/**
- * Get the pixel value (0 or 1) at a coordinate.
- */
-export function get(display: Display, x: number, y: number): number {
-  return display[y][x];
+    return erased;
+  }
 }
