@@ -64,7 +64,7 @@ export function set(display: Display, x: number, y: number, bytes: number[]): bo
     // Iterate each bit in the byte. Do it the easy way by converting to a string and iterating its
     // characters.
     const byteString = byte.toString(2).padStart(8, '0');
-    byteString.split('').forEach(function (bitString, bitIndex) {
+    byteString.split('').map(Number).forEach(function (spriteBit, bitIndex) {
       // Determine where this pixel will be drawn. Wrap if necessary around the edges of the
       // display if necessary.
       const destinationX = (x + bitIndex) % 64;
@@ -72,12 +72,12 @@ export function set(display: Display, x: number, y: number, bytes: number[]): bo
 
       // Determine if we've erased a pixel.
       const currentBit = get(display, destinationX, destinationY);
-      if (currentBit === 1 && bitString === '0') {
+      if (currentBit === 1 && spriteBit === 0) {
         erased = true;
       }
 
       // Set the value.
-      display[destinationY][destinationX] = Number(bitString);
+      display[destinationY][destinationX] = spriteBit;
     });
   });
 
