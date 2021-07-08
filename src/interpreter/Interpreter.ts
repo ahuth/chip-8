@@ -1,6 +1,6 @@
 import {instructions} from './instructions';
 import Display from './Display';
-import * as Memory from './Memory';
+import Memory from './Memory';
 
 /**
  * Chip-8 interpreter.
@@ -14,7 +14,7 @@ export type Interpreter = ReturnType<typeof create>;
 export function create() {
   return {
     display: new Display(),
-    memory: Memory.create(),
+    memory: new Memory(),
 
     /**
      * Stack of addresses that should be returned to after finishing a subroutine.
@@ -58,7 +58,7 @@ export function create() {
  * Load a program into memory so it can be executed
  */
 export function load(interpreter: Interpreter, program: number[]): void {
-  Memory.load(interpreter.memory, program);
+  interpreter.memory.load(program);
   // Programs are normally loaded starting at memory address 0x200. The ETI 660 is different, but
   // let's assume a normal program, and set the program counter accordingly.
   interpreter.program_counter = 0x200;
@@ -70,7 +70,7 @@ export function load(interpreter: Interpreter, program: number[]): void {
 export function tick(interpreter: Interpreter): void {
   // Fetch
   const currentAddress = interpreter.program_counter;
-  const opcode = Memory.read2(interpreter.memory, currentAddress);
+  const opcode = interpreter.memory.read2(currentAddress);
 
   // Decode
   const instruction = instructions.find((instruction) => instruction.test(opcode));
